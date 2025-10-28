@@ -1,0 +1,62 @@
+
+body{
+    cursor: none;
+    overflow: hidden;
+    background: black;
+    color: white;
+
+}
+.cursor{
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out;
+    z-index: 9999;
+}
+
+.circle-button {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: 100px;
+    height: 100px;
+    animation: rotate 10s linear infinite;
+}
+
+.center-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: white;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg);}
+}
+
+.circle-button:hover{
+    transform: scale(2.0); 
+}
+.circle-button:hover ~ .cursor{
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+
+
+
+h1{
+    font-family: "Yatra One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+    background-color: black;
+    color: white;
+    padding-left: 40px;
+}
