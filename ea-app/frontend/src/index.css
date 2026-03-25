@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: #050505;
+  color: #ffffff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+html:not(.dark) body {
+  background-color: #f5f0eb;
+  color: #1a1a1a;
+}
+
+.font-headline {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-body {
+  font-family: 'Inter', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.halftone {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.halftone-border {
+  background-image: radial-gradient(circle, #00e3fd 1.5px, transparent 1.5px);
+  background-size: 6px 6px;
+}
+
+.tape-edge {
+  clip-path: polygon(2% 0%, 98% 1%, 100% 15%, 99% 85%, 100% 100%, 1% 99%, 0% 80%, 2% 20%);
+}
+
+.tape-strip {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L5 2 L10 0 L15 3 L20 0 L25 4 L30 0 L35 2 L40 0 L45 3 L50 0 L55 4 L60 0 L65 2 L70 0 L75 3 L80 0 L85 4 L90 0 L95 2 L100 0 V20 L95 18 L90 20 L85 17 L80 20 L75 16 L70 20 L65 18 L60 20 L55 17 L50 20 L45 16 L40 20 L35 18 L30 20 L25 17 L20 20 L15 16 L10 20 L5 18 L0 20 Z' fill='%23FF4D00'/%3E%3C/svg%3E");
+}
+
+.distressed-border {
+  border: 2px solid;
+  border-image: linear-gradient(to right, #FF4D00 20%, transparent 20%, transparent 40%, #FF4D00 40%, #FF4D00 60%, transparent 60%, transparent 80%, #FF4D00 80%) 1;
+}
+
+.glitch-hover:hover {
+  text-shadow: 2px 0 #00e3fd, -2px 0 #FF4D00;
+}
+
+.halftone-overlay {
+  background-image: radial-gradient(circle, #FF4D00 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.15;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@theme {
+  --color-primary: #FF4D00;
+  --color-accent: #00e3fd;
+  --color-surface: #0a0a0a;
+  --color-surface-high: #121212;
+  --color-surface-container: #0e0e0e;
+  --color-surface-bright: #1a1a1a;
+}
+
+.input-field {
+  @apply w-full bg-transparent border-b-4 border-primary/30 p-4 font-['Space_Grotesk'] font-black uppercase text-white placeholder:text-white/20 focus:border-primary focus:ring-0 outline-none transition-colors;
+}
+
+/* ─── Light Mode Overrides ─── */
+html:not(.dark) .input-field {
+  color: #1a1a1a;
+}
+
+html:not(.dark) .input-field::placeholder {
+  color: rgba(0,0,0,0.3);
+}
+
+/* Surface overrides for light mode */
+html:not(.dark) [class*="bg-[#050505]"] { background-color: #f5f0eb !important; }
+html:not(.dark) [class*="bg-[#0a0a0a]"] { background-color: #ffffff !important; }
+html:not(.dark) [class*="bg-[#0e0e0e]"] { background-color: #f0ebe5 !important; }
+html:not(.dark) [class*="bg-[#121212]"] { background-color: #e8e2db !important; }
+html:not(.dark) [class*="bg-[#1a1a1a]"] { background-color: #ddd6cd !important; }
+html:not(.dark) [class*="bg-black"] { background-color: #f5f0eb !important; }
+
+/* Text overrides */
+html:not(.dark) [class*="text-white"] { color: #1a1a1a !important; }
+html:not(.dark) [class*="text-white/20"] { color: rgba(0,0,0,0.2) !important; }
+html:not(.dark) [class*="text-white/30"] { color: rgba(0,0,0,0.3) !important; }
+html:not(.dark) [class*="text-white/40"] { color: rgba(0,0,0,0.4) !important; }
+html:not(.dark) [class*="text-white/50"] { color: rgba(0,0,0,0.5) !important; }
+html:not(.dark) [class*="text-white/60"] { color: rgba(0,0,0,0.6) !important; }
+html:not(.dark) [class*="text-white/70"] { color: rgba(0,0,0,0.7) !important; }
+
+/* Border overrides */
+html:not(.dark) [class*="border-[#1a1a1a]"] { border-color: #ddd6cd !important; }
+html:not(.dark) [class*="border-white"] { border-color: #1a1a1a !important; }
+
+/* Grayscale images revert in light mode */
+html:not(.dark) img.grayscale { filter: none !important; }
+
+/* Shadows for light mode */
+html:not(.dark) [class*="shadow-["] {
+  --tw-shadow-color: rgba(0,0,0,0.15) !important;
+}
+
+/* Scrollbar for light mode */
+html:not(.dark) ::-webkit-scrollbar-track { background: #f5f0eb; }
+html:not(.dark) ::-webkit-scrollbar-thumb { background: #FF4D00; }

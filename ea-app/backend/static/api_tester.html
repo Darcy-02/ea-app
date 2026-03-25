@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmptyArt API Tester</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; min-height: 100vh; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; background: linear-gradient(135deg, #5044e5, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: 0.8rem; color: #666; margin-bottom: 24px; }
+  .card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  select, input, textarea { background: #1a1a1a; border: 1px solid #282828; border-radius: 8px; padding: 10px 12px; color: #e0e0e0; font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.15s; }
+  select:focus, input:focus, textarea:focus { border-color: #5044e5; }
+  select { width: 110px; font-weight: 600; cursor: pointer; }
+  .url-input { flex: 1; min-width: 200px; }
+  .send-btn { background: #5044e5; color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; font-size: 13px; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+  .send-btn:hover { opacity: 0.9; }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  label { display: block; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 600; }
+  textarea { width: 100%; min-height: 90px; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+  .token-row { display: flex; gap: 8px; align-items: center; }
+  .token-row input { flex: 1; }
+  .token-btn { background: #1a1a1a; border: 1px solid #282828; border-radius: 8px; padding: 8px 14px; color: #888; font-size: 11px; cursor: pointer; white-space: nowrap; }
+  .token-btn:hover { color: #e0e0e0; border-color: #444; }
+  .response-card { background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 12px; overflow: hidden; }
+  .response-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #1e1e1e; font-size: 12px; }
+  .status { font-weight: 700; padding: 2px 10px; border-radius: 99px; font-size: 12px; }
+  .status.ok { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .status.err { background: rgba(248,113,113,0.15); color: #f87171; }
+  .response-body { padding: 16px; max-height: 500px; overflow: auto; }
+  .response-body pre { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; color: #a0a0a0; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .preset { background: #1a1a1a; border: 1px solid #222; border-radius: 8px; padding: 6px 12px; font-size: 11px; cursor: pointer; color: #888; transition: all 0.15s; }
+  .preset:hover { border-color: #5044e5; color: #e0e0e0; }
+  .preset .method { font-weight: 700; margin-right: 4px; }
+  .preset .method.get { color: #4ade80; } .preset .method.post { color: #facc15; } .preset .method.put { color: #60a5fa; } .preset .method.delete { color: #f87171; }
+  .section-title { font-size: 12px; color: #444; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .time { color: #555; font-size: 11px; }
+  .file-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .file-input { font-size: 12px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>EmptyArt API Tester</h1>
+  <p class="subtitle">Built-in REST client — test your API endpoints without leaving the browser</p>
+
+  <!-- Quick Presets -->
+  <div class="card">
+    <div class="section-title">Quick Presets</div>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <!-- Request Builder -->
+  <div class="card">
+    <div class="row">
+      <select id="method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+      <input id="url" class="url-input" placeholder="/api/auth/register" value="/api/health">
+      <button class="send-btn" id="send" onclick="sendRequest()">Send</button>
+    </div>
+
+    <label>Auth Token</label>
+    <div class="token-row" style="margin-bottom: 12px;">
+      <input id="token" placeholder="Paste JWT token here (auto-saved)">
+      <button class="token-btn" onclick="clearToken()">Clear</button>
+    </div>
+
+    <div id="body-section">
+      <label>Request Body (JSON)</label>
+      <textarea id="body" placeholder='{"email": "test@example.com", "username": "test", "password": "password123"}'></textarea>
+    </div>
+
+    <div id="file-section" class="file-row">
+      <label style="margin-bottom:0;">File Upload</label>
+      <input type="file" id="fileInput" class="file-input" accept="image/*">
+      <button class="token-btn" onclick="document.getElementById('fileInput').value=''">Clear</button>
+    </div>
+  </div>
+
+  <!-- Response -->
+  <div class="response-card" id="response-card" style="display:none;">
+    <div class="response-header">
+      <div><span class="status" id="resp-status"></span></div>
+      <span class="time" id="resp-time"></span>
+    </div>
+    <div class="response-body"><pre id="resp-body"></pre></div>
+  </div>
+</div>
+
+<script>
+const PRESETS = [
+  { method: "GET",    url: "/api/health",                  label: "Health Check" },
+  { method: "POST",   url: "/api/auth/register",           label: "Register",        body: '{"email":"test@example.com","username":"testuser","password":"password123"}' },
+  { method: "POST",   url: "/api/auth/login",              label: "Login",           body: '{"email":"test@example.com","password":"password123"}' },
+  { method: "GET",    url: "/api/auth/me",                 label: "Current User",    auth: true },
+  { method: "GET",    url: "/api/uploads/?page=1",         label: "List Uploads" },
+  { method: "GET",    url: "/api/uploads/feed",            label: "Feed",            auth: true },
+  { method: "POST",   url: "/api/uploads/",                label: "Create Upload",   auth: true, file: true, body: '{"title":"My Art","description":"A test upload"}' },
+  { method: "POST",   url: "/api/uploads/1/like",          label: "Toggle Like",     auth: true },
+  { method: "POST",   url: "/api/uploads/1/bookmark",      label: "Toggle Bookmark", auth: true },
+  { method: "POST",   url: "/api/uploads/1/comment",       label: "Add Comment",     auth: true, body: '{"text":"Great artwork!"}' },
+  { method: "GET",    url: "/api/uploads/1/comments",      label: "Get Comments" },
+  { method: "GET",    url: "/api/uploads/bookmarked",      label: "My Bookmarks",    auth: true },
+  { method: "GET",    url: "/api/users/1",                 label: "User Profile" },
+  { method: "POST",   url: "/api/users/1/follow",          label: "Toggle Follow",   auth: true },
+  { method: "GET",    url: "/api/admin/uploads",           label: "Admin: Uploads",  auth: true },
+  { method: "GET",    url: "/api/admin/users",             label: "Admin: Users",    auth: true },
+];
+
+const presetsEl = document.getElementById("presets");
+PRESETS.forEach(p => {
+  const btn = document.createElement("button");
+  btn.className = "preset";
+  btn.innerHTML = `<span class="method ${p.method.toLowerCase()}">${p.method}</span>${p.label}`;
+  btn.onclick = () => applyPreset(p);
+  presetsEl.appendChild(btn);
+});
+
+function applyPreset(p) {
+  document.getElementById("method").value = p.method;
+  document.getElementById("url").value = p.url;
+  document.getElementById("body").value = p.body || "";
+  if (!p.file) document.getElementById("fileInput").value = "";
+}
+
+// Persist token in localStorage
+const tokenInput = document.getElementById("token");
+tokenInput.value = localStorage.getItem("api_test_token") || "";
+tokenInput.addEventListener("input", () => localStorage.setItem("api_test_token", tokenInput.value));
+function clearToken() { tokenInput.value = ""; localStorage.removeItem("api_test_token"); }
+
+async function sendRequest() {
+  const method = document.getElementById("method").value;
+  const url = document.getElementById("url").value;
+  const token = document.getElementById("token").value.trim();
+  const bodyText = document.getElementById("body").value.trim();
+  const fileInput = document.getElementById("fileInput");
+  const sendBtn = document.getElementById("send");
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Sending...";
+
+  const headers = {};
+  if (token) headers["Authorization"] = "Bearer " + token;
+
+  let body = undefined;
+  const file = fileInput.files[0];
+
+  if (file && (method === "POST" || method === "PUT")) {
+    // FormData upload
+    const fd = new FormData();
+    fd.append("image", file);
+    if (bodyText) {
+      try {
+        const json = JSON.parse(bodyText);
+        for (const [k, v] of Object.entries(json)) fd.append(k, v);
+      } catch {}
+    }
+    body = fd;
+  } else if (bodyText && method !== "GET") {
+    headers["Content-Type"] = "application/json";
+    body = bodyText;
+  }
+
+  const card = document.getElementById("response-card");
+  const statusEl = document.getElementById("resp-status");
+  const timeEl = document.getElementById("resp-time");
+  const bodyEl = document.getElementById("resp-body");
+
+  const start = performance.now();
+  try {
+    const resp = await fetch(url, { method, headers, body });
+    const elapsed = Math.round(performance.now() - start);
+
+    statusEl.textContent = resp.status + " " + resp.statusText;
+    statusEl.className = "status " + (resp.ok ? "ok" : "err");
+    timeEl.textContent = elapsed + "ms";
+
+    const ct = resp.headers.get("content-type") || "";
+    let text;
+    if (ct.includes("json")) {
+      const json = await resp.json();
+      text = JSON.stringify(json, null, 2);
+      // Auto-save token from login/register responses
+      if (json.token && (url.includes("login") || url.includes("register"))) {
+        tokenInput.value = json.token;
+        localStorage.setItem("api_test_token", json.token);
+      }
+    } else {
+      text = await resp.text();
+    }
+    bodyEl.textContent = text;
+  } catch (err) {
+    statusEl.textContent = "Error";
+    statusEl.className = "status err";
+    timeEl.textContent = "";
+    bodyEl.textContent = err.message;
+  }
+
+  card.style.display = "block";
+  sendBtn.disabled = false;
+  sendBtn.textContent = "Send";
+}
+
+// Send on Ctrl+Enter
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") sendRequest();
+});
+</script>
+</body>
+</html>
