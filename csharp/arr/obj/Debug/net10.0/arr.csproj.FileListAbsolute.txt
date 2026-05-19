@@ -1,0 +1,15 @@
+C:\Users\Darcy\csharp\arr\bin\Debug\net10.0\arr.exe
+C:\Users\Darcy\csharp\arr\bin\Debug\net10.0\arr.deps.json
+C:\Users\Darcy\csharp\arr\bin\Debug\net10.0\arr.runtimeconfig.json
+C:\Users\Darcy\csharp\arr\bin\Debug\net10.0\arr.dll
+C:\Users\Darcy\csharp\arr\bin\Debug\net10.0\arr.pdb
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.AssemblyInfoInputs.cache
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.AssemblyInfo.cs
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.csproj.CoreCompileInputs.cache
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.sourcelink.json
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.dll
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\refint\arr.dll
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.pdb
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\arr.genruntimeconfig.cache
+C:\Users\Darcy\csharp\arr\obj\Debug\net10.0\ref\arr.dll
